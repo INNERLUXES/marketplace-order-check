@@ -1,0 +1,52 @@
+{
+  "name": "marketplace-order-check",
+  "version": "1.0.0",
+  "description": "Marketplace order check: reads an export of NFT marketplace orders as JSON before they are signed or filled (the chain, the collections with their standard and their declared ERC-2981 royalty, and the listings and offers, each with its maker, taker, contract, token id, amount, price, currency, start and end in unix seconds, fees and criteria), contacts no chain, node, marketplace or API, fetches nothing, signs nothing and reads no clock, and lists with its line every mistake an NFT marketplace developer would catch: fees that take the whole price, a royalty paid to another receiver than the ERC-2981 one or above or below it, an order that never expires, lasts too long, has expired against --now or ends before it starts, a price of 0 or with more places than its currency, a currency of another chain, an offer in the native currency, a token listed twice, an ERC-721 amount other than 1, an ERC-1155 amount of 0 or above the balance, malformed or zero addresses, a maker that is its own taker and an offer for a set of tokens with no merkle root. Not legal or financial advice. Text, markdown, JSON and SARIF output, exit codes for a pipeline, no dependencies.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "bin": {
+    "marketplace-order-check": "bin/marketplace-order-check.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "docs",
+    "examples",
+    "research",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.js\"",
+    "test:coverage": "node --test --experimental-test-coverage \"test/*.test.js\"",
+    "check": "node tools/check.mjs",
+    "example": "node tools/example.mjs"
+  },
+  "keywords": [
+    "nft",
+    "nft-marketplace",
+    "marketplace",
+    "orders",
+    "erc-721",
+    "erc-1155",
+    "erc-2981",
+    "royalties",
+    "seaport",
+    "static-analysis",
+    "sarif",
+    "cli"
+  ],
+  "author": "INNERLUXES <info@innerluxes.dev>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/INNERLUXES/marketplace-order-check.git"
+  },
+  "homepage": "https://innerluxes.dev/blockchain/create-nft-marketplace"
+}
