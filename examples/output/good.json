@@ -1,0 +1,273 @@
+{
+  "tool": "marketplace-order-check",
+  "version": "1.0.0",
+  "input": {
+    "file": "examples/good/orders.json",
+    "format": "json",
+    "bytes": 2882,
+    "lines": 15
+  },
+  "export": {
+    "chain": "ethereum",
+    "collections": [
+      {
+        "name": "Harbor Example Owls",
+        "contract": "0x1111111111111111111111111111111111111111",
+        "standard": "ERC-721",
+        "royalty": {
+          "bps": 500,
+          "percent": "5%",
+          "receiver": "0x9999999999999999999999999999999999999999"
+        }
+      },
+      {
+        "name": "Meadow Example Badges",
+        "contract": "0x2222222222222222222222222222222222222222",
+        "standard": "ERC-1155",
+        "royalty": {
+          "bps": 250,
+          "percent": "2.5%",
+          "receiver": "0x8888888888888888888888888888888888888888"
+        }
+      }
+    ],
+    "orders": {
+      "total": 5,
+      "listings": 3,
+      "offers": 2
+    }
+  },
+  "totals": {
+    "findings": 0,
+    "byLevel": {
+      "error": 0,
+      "warning": 0,
+      "info": 0
+    },
+    "hidden": 0
+  },
+  "rules": [
+    {
+      "id": "file-unreadable",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-missing",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-unknown",
+      "level": "warning",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-invalid",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-duplicate",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "secret-in-file",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "price-malformed",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "fees-exceed-price",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "royalty-receiver-mismatch",
+      "level": "warning",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "royalty-above-declared",
+      "level": "warning",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "royalty-below-declared",
+      "level": "info",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "order-never-expires",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "expiry-too-long",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "order-expired",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "start-after-end",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "price-zero",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "currency-chain-mismatch",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "offer-in-native-currency",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "duplicate-listing",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "erc721-amount-not-one",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "erc1155-amount-invalid",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "erc1155-amount-above-balance",
+      "level": "error",
+      "kind": "documented",
+      "findings": 0
+    },
+    {
+      "id": "address-malformed",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "maker-is-taker",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "criteria-root-missing",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 0
+    },
+    {
+      "id": "collection-offer-without-criteria",
+      "level": "info",
+      "kind": "best practice",
+      "findings": 0
+    }
+  ],
+  "config": {
+    "minSeverity": "info",
+    "failOn": "error",
+    "maxExpiryDays": 180,
+    "now": 1800000000
+  },
+  "findings": [],
+  "orders": [
+    {
+      "id": "L1",
+      "side": "listing",
+      "collection": "Harbor Example Owls",
+      "token": "#7",
+      "amount": 1,
+      "price": "1.5 ETH",
+      "fees": "0.1125 ETH",
+      "sellerGets": "1.3875 ETH"
+    },
+    {
+      "id": "L2",
+      "side": "listing",
+      "collection": "Meadow Example Badges",
+      "token": "#3",
+      "amount": 2,
+      "price": "40 USDC",
+      "fees": "2 USDC",
+      "sellerGets": "38 USDC"
+    },
+    {
+      "id": "O1",
+      "side": "offer",
+      "collection": "Harbor Example Owls",
+      "token": "#9",
+      "amount": null,
+      "price": "0.8 WETH",
+      "fees": "0.06 WETH",
+      "sellerGets": "0.74 WETH"
+    },
+    {
+      "id": "O2",
+      "side": "offer",
+      "collection": "Harbor Example Owls",
+      "token": "by root",
+      "amount": 3,
+      "price": "0.5 WETH",
+      "fees": "0.025 WETH",
+      "sellerGets": "0.475 WETH"
+    },
+    {
+      "id": "T1",
+      "side": "listing",
+      "collection": "Harbor Example Owls",
+      "token": "#11",
+      "amount": null,
+      "price": "transfer",
+      "fees": "0",
+      "sellerGets": null
+    }
+  ],
+  "notes": [],
+  "notice": "This report is an input to a review of marketplace orders before they are signed or filled: not legal or financial advice, not an audit of the marketplace or its contracts and not a guarantee that an order will fill as intended.",
+  "result": {
+    "pass": true,
+    "failOn": "error",
+    "text": "PASS - no finding at or above error"
+  }
+}

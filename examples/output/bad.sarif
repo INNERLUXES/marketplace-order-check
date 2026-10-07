@@ -1,0 +1,1153 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "marketplace-order-check",
+          "version": "1.0.0",
+          "informationUri": "https://github.com/INNERLUXES/marketplace-order-check",
+          "rules": [
+            {
+              "id": "file-unreadable",
+              "name": "file-unreadable",
+              "shortDescription": {
+                "text": "the order file is not JSON the reader can follow, or its top level is not an object, so nothing in it was read"
+              },
+              "help": {
+                "text": "Write the export as one JSON object with the chain, the collections and the orders (docs/inputs.md); fix the line named. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "field-missing",
+              "name": "field-missing",
+              "shortDescription": {
+                "text": "a field the checks need is not in the file: the chain, the collections or the orders, the contract or the standard of a collection, or the id, side, maker, contract, token id, amount of an ERC-1155 order, price or currency of an order, the kind or the recipient of a fee, or a declared collection for the contract of an order"
+              },
+              "help": {
+                "text": "Add the field named; docs/inputs.md lists what the file needs. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "field-unknown",
+              "name": "field-unknown",
+              "shortDescription": {
+                "text": "a key the tool does not read, often a misspelt one; its value was left out of every check"
+              },
+              "help": {
+                "text": "Correct the spelling to a field of docs/inputs.md, or remove it. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "field-invalid",
+              "name": "field-invalid",
+              "shortDescription": {
+                "text": "a value of the wrong type or form: text where a whole number belongs, a chain, standard, side, kind or fee kind the tool does not know, a token id that is not a whole number of at most 78 digits, a hash that is not 64 hex digits, a fee with both bps and amount, a listing of kind collection or criteria, a token id or criteria on an order of the wrong kind, or a transfer with a price"
+              },
+              "help": {
+                "text": "Write the value as docs/inputs.md shows: text for ids, addresses and choices, whole numbers for amounts, balances and times, plain decimal numbers for prices and fee amounts, true or false for flags. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "field-duplicate",
+              "name": "field-duplicate",
+              "shortDescription": {
+                "text": "two orders share an id (compared without case and outer spaces), or a contract is declared as two collections, so a reader of the file cannot tell them apart"
+              },
+              "help": {
+                "text": "Give every order an id of its own, and declare each contract once. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "secret-in-file",
+              "name": "secret-in-file",
+              "shortDescription": {
+                "text": "the file holds a private key, a seed or a mnemonic, under a key named for one or as a value shaped like one; the tool never reads it and never shows it"
+              },
+              "help": {
+                "text": "Remove the value from the file and from wherever the file was copied, treat it as exposed and move what it controls to a new key. An order export names wallets by their public address only. (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "price-malformed",
+              "name": "price-malformed",
+              "shortDescription": {
+                "text": "the price of an order or the amount of a fee is not a plain decimal number of 0 or more, or has more decimal places than the currency of the order holds"
+              },
+              "help": {
+                "text": "Write the price as a plain decimal in the unit of the currency, such as \"0.25\" for 0.25 ETH, with no sign, exponent or separator and no more places than the currency has (18 for ETH, 6 for USDC). (input)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "input"
+              }
+            },
+            {
+              "id": "fees-exceed-price",
+              "name": "fees-exceed-price",
+              "shortDescription": {
+                "text": "the marketplace fee, the royalty and the other fees of an order add up to its whole price or more, so the seller would receive nothing or the order could not be filled"
+              },
+              "help": {
+                "text": "Lower the fees or raise the price until the fees are a part of it; check that a fee written in basis points was not written as an amount, or the other way round. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "royalty-receiver-mismatch",
+              "name": "royalty-receiver-mismatch",
+              "shortDescription": {
+                "text": "an order pays its royalty to an address other than the ERC-2981 receiver the file declares for the collection, though royaltyInfo names the address the royalty is sent to"
+              },
+              "help": {
+                "text": "Pay the royalty to the receiver the contract declares, or update the declared receiver in the file if the contract was changed. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "royalty-above-declared",
+              "name": "royalty-above-declared",
+              "shortDescription": {
+                "text": "an order pays more royalty than the ERC-2981 royalty the file declares for the collection works out to on its price"
+              },
+              "help": {
+                "text": "Set the royalty of the order to the declared share of its price, or correct the declared royalty of the collection. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "royalty-below-declared",
+              "name": "royalty-below-declared",
+              "shortDescription": {
+                "text": "an order pays less royalty than the ERC-2981 royalty the file declares for the collection works out to on its price, or none; ERC-2981 leaves the payment to the marketplace, so this is a note"
+              },
+              "help": {
+                "text": "Pay the declared share of the price as royalty if the marketplace or the creator expects it, or keep the order as it is on purpose. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "order-never-expires",
+              "name": "order-never-expires",
+              "shortDescription": {
+                "text": "an order has no end, an end of never, or an end so far ahead that it stays open for good, so a price that is forgotten can be filled at any time"
+              },
+              "help": {
+                "text": "Give every order an end, in unix seconds, no further ahead than the order is meant to last. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "expiry-too-long",
+              "name": "expiry-too-long",
+              "shortDescription": {
+                "text": "an order is open for longer than --max-expiry-days (180 days by default), counted from its start, or from --now when it has none"
+              },
+              "help": {
+                "text": "Shorten the order, or raise --max-expiry-days for a file whose orders are long on purpose. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "order-expired",
+              "name": "order-expired",
+              "shortDescription": {
+                "text": "an order ends at or before the second given with --now, so it can no longer be filled; the check runs only when --now is given"
+              },
+              "help": {
+                "text": "Give the order a later end and sign it again, or remove it from the file. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "start-after-end",
+              "name": "start-after-end",
+              "shortDescription": {
+                "text": "an order starts at or after its end, so it is open for no second"
+              },
+              "help": {
+                "text": "Set the end after the start; both are unix seconds. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "price-zero",
+              "name": "price-zero",
+              "shortDescription": {
+                "text": "an order has a price of 0 and is not marked as a transfer, so the token would go for nothing"
+              },
+              "help": {
+                "text": "Set the price, or mark a gift or a move between own wallets with \"transfer\": true. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "currency-chain-mismatch",
+              "name": "currency-chain-mismatch",
+              "shortDescription": {
+                "text": "the currency of an order belongs to other chains than the chain of the file, such as SOL or AVAX on ethereum"
+              },
+              "help": {
+                "text": "Price the order in a currency of the chain of the file, or correct the chain. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "offer-in-native-currency",
+              "name": "offer-in-native-currency",
+              "shortDescription": {
+                "text": "an offer is priced in the native currency of its chain, such as ETH on ethereum, which a marketplace cannot draw from the wallet of the buyer"
+              },
+              "help": {
+                "text": "Price the offer in the wrapped token of the chain, such as WETH, and have the buyer approve it for the marketplace. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "duplicate-listing",
+              "name": "duplicate-listing",
+              "shortDescription": {
+                "text": "the same maker lists the same token of the same contract twice, so the cheaper listing may be filled while the dearer one is the one the seller watches"
+              },
+              "help": {
+                "text": "Keep one listing per token and cancel the other; if the price changed, cancel the older listing on chain. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "erc721-amount-not-one",
+              "name": "erc721-amount-not-one",
+              "shortDescription": {
+                "text": "an ERC-721 order for one token id has an amount other than 1, or an ERC-721 order of any kind is for 0 tokens, though an ERC-721 holder has none or one of a token"
+              },
+              "help": {
+                "text": "Write an amount of 1 for an ERC-721 token, or correct the standard of the collection if it is ERC-1155. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "erc1155-amount-invalid",
+              "name": "erc1155-amount-invalid",
+              "shortDescription": {
+                "text": "an ERC-1155 order is for an amount of 0"
+              },
+              "help": {
+                "text": "Write the number of tokens the order is for, 1 or more. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "erc1155-amount-above-balance",
+              "name": "erc1155-amount-above-balance",
+              "shortDescription": {
+                "text": "an ERC-1155 listing is for more of a token than the balance of the maker the file declares, though a transfer of more than the balance reverts"
+              },
+              "help": {
+                "text": "Lower the amount to the balance of the maker, or correct makerBalance if the maker holds more. (documented)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "documented"
+              }
+            },
+            {
+              "id": "address-malformed",
+              "name": "address-malformed",
+              "shortDescription": {
+                "text": "a maker, a taker, a contract, a fee recipient or a royalty receiver that is not 0x and 40 hex digits, or is the zero address where the zero address loses tokens or money"
+              },
+              "help": {
+                "text": "Copy the address again from the wallet or the contract; send nothing to a zero address, which no one holds. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "maker-is-taker",
+              "name": "maker-is-taker",
+              "shortDescription": {
+                "text": "an order names its own maker as the only taker, so it can only fill against the wallet that made it"
+              },
+              "help": {
+                "text": "Name the buyer or the seller the order is meant for as taker, or leave taker out for an order anyone may fill. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "criteria-root-missing",
+              "name": "criteria-root-missing",
+              "shortDescription": {
+                "text": "an offer for a set of tokens (kind criteria) has no merkle root of the token ids, or a root of zeros, so the marketplace cannot tell which tokens it covers"
+              },
+              "help": {
+                "text": "Build the merkle tree of the token ids the offer covers and set its root in criteria.root, or make the offer a collection offer if it covers every token. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            },
+            {
+              "id": "collection-offer-without-criteria",
+              "name": "collection-offer-without-criteria",
+              "shortDescription": {
+                "text": "a collection offer covers every token of the contract, so any holder may fill it with the token they want least; a note, since many offers mean that"
+              },
+              "help": {
+                "text": "Keep the collection offer if any token will do, or make it an offer for a set of tokens with a merkle root of their ids. (best practice)"
+              },
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "properties": {
+                "kind": "best practice"
+              }
+            }
+          ]
+        }
+      },
+      "artifacts": [
+        {
+          "location": {
+            "uri": "examples/bad/orders.json"
+          }
+        }
+      ],
+      "results": [
+        {
+          "ruleId": "erc721-amount-not-one",
+          "ruleIndex": 19,
+          "level": "error",
+          "message": {
+            "text": "Order L1 is for 2 of token #7 of the ERC-721 collection Harbor Example Owls, but an ERC-721 holder has none or one of a token. Fix: Write an amount of 1 for an ERC-721 token, or correct the standard of the collection if it is ERC-1155."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 183
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "subject": "L1"
+          }
+        },
+        {
+          "ruleId": "price-zero",
+          "ruleIndex": 15,
+          "level": "error",
+          "message": {
+            "text": "Order L3 has a price of 0 and is not marked as a transfer, so the token would go for nothing. This is a best practice of this tool, not a rule in the pages it cites. Fix: Set the price, or mark a gift or a move between own wallets with \"transfer\": true."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 167
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "L3"
+          }
+        },
+        {
+          "ruleId": "start-after-end",
+          "ruleIndex": 14,
+          "level": "error",
+          "message": {
+            "text": "Order L3 starts at unix second 1800500000 and ends at 1800400000, so it is open for no second: it ends before it starts. This is a best practice of this tool, not a rule in the pages it cites. Fix: Set the end after the start; both are unix seconds."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 11,
+                  "startColumn": 221
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "L3"
+          }
+        },
+        {
+          "ruleId": "erc1155-amount-above-balance",
+          "ruleIndex": 21,
+          "level": "error",
+          "message": {
+            "text": "Order L4 lists 12 of token #3 of the ERC-1155 collection Meadow Example Badges, but the file declares a balance of 5 for its maker. A compliant ERC-1155 contract reverts a transfer of more than the holder has. Fix: Lower the amount to the balance of the maker, or correct makerBalance if the maker holds more."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 167
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "subject": "L4"
+          }
+        },
+        {
+          "ruleId": "price-malformed",
+          "ruleIndex": 6,
+          "level": "error",
+          "message": {
+            "text": "The price of order L4 has 7 decimal places, but USDC holds 6, so it cannot be paid as written. Fix: Write the price as a plain decimal in the unit of the currency, such as \"0.25\" for 0.25 ETH, with no sign, exponent or separator and no more places than the currency has (18 for ETH, 6 for USDC)."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 12,
+                  "startColumn": 200
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "subject": "L4"
+          }
+        },
+        {
+          "ruleId": "maker-is-taker",
+          "ruleIndex": 23,
+          "level": "error",
+          "message": {
+            "text": "The taker of order L5 is its own maker, 0xdddddddddddddddddddddddddddddddddddddddd, so the order can only fill against the wallet that made it. This is a best practice of this tool, not a rule in the pages it cites. Fix: Name the buyer or the seller the order is meant for as taker, or leave taker out for an order anyone may fill."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 93
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "L5"
+          }
+        },
+        {
+          "ruleId": "erc1155-amount-invalid",
+          "ruleIndex": 20,
+          "level": "error",
+          "message": {
+            "text": "Order L5 is for 0 of token #4 of the ERC-1155 collection Meadow Example Badges. This is a best practice of this tool, not a rule in the pages it cites. Fix: Write the number of tokens the order is for, 1 or more."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 222
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "L5"
+          }
+        },
+        {
+          "ruleId": "currency-chain-mismatch",
+          "ruleIndex": 16,
+          "level": "error",
+          "message": {
+            "text": "The currency of order L5 is SOL, which the tool knows on no chain of the EVM family, but the chain of the file is ethereum. This is a best practice of this tool, not a rule in the pages it cites. Fix: Price the order in a currency of the chain of the file, or correct the chain."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 269
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "L5"
+          }
+        },
+        {
+          "ruleId": "fees-exceed-price",
+          "ruleIndex": 7,
+          "level": "error",
+          "message": {
+            "text": "The fees of order L5 add up to 3 SOL, 1 SOL above its price of 2 SOL, so the seller would receive nothing and the order cannot be filled. This is a best practice of this tool, not a rule in the pages it cites. Fix: Lower the fees or raise the price until the fees are a part of it; check that a fee written in basis points was not written as an amount, or the other way round."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 328
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "L5"
+          }
+        },
+        {
+          "ruleId": "address-malformed",
+          "ruleIndex": 22,
+          "level": "error",
+          "message": {
+            "text": "The maker of order O1, \"0x12345\", has 5 characters after 0x, not 40; an address is 0x followed by 40 hex digits. This is a best practice of this tool, not a rule in the pages it cites. Fix: Copy the address again from the wallet or the contract; send nothing to a zero address, which no one holds."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "O1"
+          }
+        },
+        {
+          "ruleId": "offer-in-native-currency",
+          "ruleIndex": 17,
+          "level": "error",
+          "message": {
+            "text": "Offer O1 is priced in ETH, the native currency of ethereum, which a marketplace cannot draw from the wallet of the buyer when a seller fills the offer; offers are paid in a wrapped token the buyer approved. This is a best practice of this tool, not a rule in the pages it cites. Fix: Price the offer in the wrapped token of the chain, such as WETH, and have the buyer approve it for the marketplace."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 146
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "O1"
+          }
+        },
+        {
+          "ruleId": "order-expired",
+          "ruleIndex": 13,
+          "level": "error",
+          "message": {
+            "text": "Order O1 ends at unix second 1799900000, 100,000 seconds before the second given with --now, 1800000000, so it can no longer be filled. This is a best practice of this tool, not a rule in the pages it cites. Fix: Give the order a later end and sign it again, or remove it from the file."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 186
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "O1"
+          }
+        },
+        {
+          "ruleId": "address-malformed",
+          "ruleIndex": 22,
+          "level": "error",
+          "message": {
+            "text": "The recipient of fee 1 of order O1, \"0x0000000000000000000000000000000000000000\", is the zero address, which no one holds; a fee sent there is lost. This is a best practice of this tool, not a rule in the pages it cites. Fix: Copy the address again from the wallet or the contract; send nothing to a zero address, which no one holds."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 14,
+                  "startColumn": 239
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "O1"
+          }
+        },
+        {
+          "ruleId": "criteria-root-missing",
+          "ruleIndex": 24,
+          "level": "error",
+          "message": {
+            "text": "Order O2 is an offer for a set of tokens with no criteria, so no merkle root names the tokens it covers. This is a best practice of this tool, not a rule in the pages it cites. Fix: Build the merkle tree of the token ids the offer covers and set its root in criteria.root, or make the offer a collection offer if it covers every token."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 15,
+                  "startColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "O2"
+          }
+        },
+        {
+          "ruleId": "field-duplicate",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "text": "The id o1 is also the id of the order at line 14; each order needs an id of its own. Fix: Give every order an id of its own, and declare each contract once."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "subject": "o1"
+          }
+        },
+        {
+          "ruleId": "secret-in-file",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "text": "The file holds the key \"seedPhrase\", which names a seed, a mnemonic or a private key. The tool never reads one, and the value is not shown. Fix: Remove the value from the file and from wherever the file was copied, treat it as exposed and move what it controls to a new key. An order export names wallets by their public address only."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 351
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "subject": null
+          }
+        },
+        {
+          "ruleId": "field-missing",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "text": "Order O4 has no price. Fix: Add the field named; docs/inputs.md lists what the file needs."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 5
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "subject": "O4"
+          }
+        },
+        {
+          "ruleId": "field-invalid",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "text": "The side of order O4 is \"bid\"; it must be one of listing, offer. Fix: Write the value as docs/inputs.md shows: text for ids, addresses and choices, whole numbers for amounts, balances and times, plain decimal numbers for prices and fee amounts, true or false for flags."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 17,
+                  "startColumn": 19
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "subject": null
+          }
+        },
+        {
+          "ruleId": "expiry-too-long",
+          "ruleIndex": 12,
+          "level": "warning",
+          "message": {
+            "text": "Order L1 is open for more than 358 days from its start, longer than the 180 days of --max-expiry-days. This is a best practice of this tool, not a rule in the pages it cites. Fix: Shorten the order, or raise --max-expiry-days for a file whose orders are long on purpose."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 252
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "L1"
+          }
+        },
+        {
+          "ruleId": "royalty-receiver-mismatch",
+          "ruleIndex": 8,
+          "level": "warning",
+          "message": {
+            "text": "Fee 2 of order L1 pays royalty to 0x7777777777777777777777777777777777777777, but collection Harbor Example Owls declares 0x9999999999999999999999999999999999999999 as its receiver. The royaltyInfo of ERC-2981 answers a marketplace with the address the royalty is sent to. Fix: Pay the royalty to the receiver the contract declares, or update the declared receiver in the file if the contract was changed."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 399
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "subject": "L1"
+          }
+        },
+        {
+          "ruleId": "duplicate-listing",
+          "ruleIndex": 18,
+          "level": "warning",
+          "message": {
+            "text": "Order L2 lists token #7 of Harbor Example Owls by the same maker as order L1 at line 9 at another price, 1.5 ETH there and 1.2 ETH here. This is a best practice of this tool, not a rule in the pages it cites. Fix: Keep one listing per token and cancel the other; if the price changed, cancel the older listing on chain."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "L2"
+          }
+        },
+        {
+          "ruleId": "order-never-expires",
+          "ruleIndex": 11,
+          "level": "warning",
+          "message": {
+            "text": "Order L2 has no end, so it stays open for good and can be filled long after its price stopped making sense. This is a best practice of this tool, not a rule in the pages it cites. Fix: Give every order an end, in unix seconds, no further ahead than the order is meant to last."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 7
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "L2"
+          }
+        },
+        {
+          "ruleId": "royalty-above-declared",
+          "ruleIndex": 9,
+          "level": "warning",
+          "message": {
+            "text": "Order L2 pays 0.09 ETH of royalty, but the royalty of 5% that collection Harbor Example Owls declares works out to 0.06 ETH on the price of 1.2 ETH. Under ERC-2981 the royalty owed is a percentage of the sale price. Fix: Set the royalty of the order to the declared share of its price, or correct the declared royalty of the collection."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 10,
+                  "startColumn": 408
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "subject": "L2"
+          }
+        },
+        {
+          "ruleId": "field-unknown",
+          "ruleIndex": 2,
+          "level": "warning",
+          "message": {
+            "text": "The key \"makerBalanse\" of order 5 is not one the tool reads, so its value was left out of every check. Did you mean \"makerBalance\"? The keys of order 5 are id, orderHash, side, kind, maker, taker, contract, tokenId, amount, makerBalance, price, currency, start, end, fees, criteria, transfer, notes. Fix: Correct the spelling to a field of docs/inputs.md, or remove it."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 235
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "input",
+            "subject": null
+          }
+        },
+        {
+          "ruleId": "royalty-below-declared",
+          "ruleIndex": 10,
+          "level": "note",
+          "message": {
+            "text": "Order L1 pays 0.045 ETH of royalty, but the royalty of 5% that collection Harbor Example Owls declares works out to 0.075 ETH on the price of 1.5 ETH. ERC-2981 leaves the payment of a royalty to the marketplace, so this is a note. Fix: Pay the declared share of the price as royalty if the marketplace or the creator expects it, or keep the order as it is on purpose."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 9,
+                  "startColumn": 458
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "subject": "L1"
+          }
+        },
+        {
+          "ruleId": "royalty-below-declared",
+          "ruleIndex": 10,
+          "level": "note",
+          "message": {
+            "text": "Order L5 pays no royalty, but the royalty of 2.5% that collection Meadow Example Badges declares works out to 0.05 SOL on the price of 2 SOL. ERC-2981 leaves the payment of a royalty to the marketplace, so this is a note. Fix: Pay the declared share of the price as royalty if the marketplace or the creator expects it, or keep the order as it is on purpose."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 13,
+                  "startColumn": 255
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "documented",
+            "subject": "L5"
+          }
+        },
+        {
+          "ruleId": "collection-offer-without-criteria",
+          "ruleIndex": 25,
+          "level": "note",
+          "message": {
+            "text": "Order o1 is a collection offer, so any holder of Harbor Example Owls may fill it with the token they want least. This is a best practice of this tool, not a rule in the pages it cites. Fix: Keep the collection offer if any token will do, or make it an offer for a set of tokens with a merkle root of their ids."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "examples/bad/orders.json",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 16,
+                  "startColumn": 36
+                }
+              }
+            }
+          ],
+          "properties": {
+            "kind": "best practice",
+            "subject": "o1"
+          }
+        }
+      ],
+      "properties": {
+        "notice": "This report is an input to a review of marketplace orders before they are signed or filled: not legal or financial advice, not an audit of the marketplace or its contracts and not a guarantee that an order will fill as intended.",
+        "result": "FAIL - 18 findings at or above error (18 error, 6 warning, 3 info)",
+        "sources": [
+          "https://eips.ethereum.org/EIPS/eip-2981",
+          "https://eips.ethereum.org/EIPS/eip-721",
+          "https://eips.ethereum.org/EIPS/eip-1155"
+        ]
+      }
+    }
+  ]
+}

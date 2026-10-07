@@ -1,0 +1,738 @@
+{
+  "tool": "marketplace-order-check",
+  "version": "1.0.0",
+  "input": {
+    "file": "examples/bad/orders.json",
+    "format": "json",
+    "bytes": 3944,
+    "lines": 19
+  },
+  "export": {
+    "chain": "ethereum",
+    "collections": [
+      {
+        "name": "Harbor Example Owls",
+        "contract": "0x1111111111111111111111111111111111111111",
+        "standard": "ERC-721",
+        "royalty": {
+          "bps": 500,
+          "percent": "5%",
+          "receiver": "0x9999999999999999999999999999999999999999"
+        }
+      },
+      {
+        "name": "Meadow Example Badges",
+        "contract": "0x2222222222222222222222222222222222222222",
+        "standard": "ERC-1155",
+        "royalty": {
+          "bps": 250,
+          "percent": "2.5%",
+          "receiver": "0x8888888888888888888888888888888888888888"
+        }
+      }
+    ],
+    "orders": {
+      "total": 9,
+      "listings": 5,
+      "offers": 3
+    }
+  },
+  "totals": {
+    "findings": 27,
+    "byLevel": {
+      "error": 18,
+      "warning": 6,
+      "info": 3
+    },
+    "hidden": 0
+  },
+  "rules": [
+    {
+      "id": "file-unreadable",
+      "level": "error",
+      "kind": "input",
+      "findings": 0
+    },
+    {
+      "id": "field-missing",
+      "level": "error",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "field-unknown",
+      "level": "warning",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "field-invalid",
+      "level": "error",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "field-duplicate",
+      "level": "error",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "secret-in-file",
+      "level": "error",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "price-malformed",
+      "level": "error",
+      "kind": "input",
+      "findings": 1
+    },
+    {
+      "id": "fees-exceed-price",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "royalty-receiver-mismatch",
+      "level": "warning",
+      "kind": "documented",
+      "findings": 1
+    },
+    {
+      "id": "royalty-above-declared",
+      "level": "warning",
+      "kind": "documented",
+      "findings": 1
+    },
+    {
+      "id": "royalty-below-declared",
+      "level": "info",
+      "kind": "documented",
+      "findings": 2
+    },
+    {
+      "id": "order-never-expires",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "expiry-too-long",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "order-expired",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "start-after-end",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "price-zero",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "currency-chain-mismatch",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "offer-in-native-currency",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "duplicate-listing",
+      "level": "warning",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "erc721-amount-not-one",
+      "level": "error",
+      "kind": "documented",
+      "findings": 1
+    },
+    {
+      "id": "erc1155-amount-invalid",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "erc1155-amount-above-balance",
+      "level": "error",
+      "kind": "documented",
+      "findings": 1
+    },
+    {
+      "id": "address-malformed",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 2
+    },
+    {
+      "id": "maker-is-taker",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "criteria-root-missing",
+      "level": "error",
+      "kind": "best practice",
+      "findings": 1
+    },
+    {
+      "id": "collection-offer-without-criteria",
+      "level": "info",
+      "kind": "best practice",
+      "findings": 1
+    }
+  ],
+  "config": {
+    "minSeverity": "info",
+    "failOn": "error",
+    "maxExpiryDays": 180,
+    "now": 1800000000
+  },
+  "findings": [
+    {
+      "id": "erc721-amount-not-one",
+      "severity": "error",
+      "message": "Order L1 is for 2 of token #7 of the ERC-721 collection Harbor Example Owls, but an ERC-721 holder has none or one of a token.",
+      "file": "examples/bad/orders.json",
+      "line": 9,
+      "column": 183,
+      "at": "examples/bad/orders.json:9",
+      "subject": "L1",
+      "fix": "Write an amount of 1 for an ERC-721 token, or correct the standard of the collection if it is ERC-1155.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "Under ERC-721 each token is set apart from every other by its id, so a holder has none or one of a given token, and the transfer functions move one token id with no amount.",
+          "source": "ERC-721: Non-Fungible Token Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-721"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "price-zero",
+      "severity": "error",
+      "message": "Order L3 has a price of 0 and is not marked as a transfer, so the token would go for nothing. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 11,
+      "column": 167,
+      "at": "examples/bad/orders.json:11",
+      "subject": "L3",
+      "fix": "Set the price, or mark a gift or a move between own wallets with \"transfer\": true.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "refusing a price of 0 on an order that is not marked as a transfer is a best practice of this tool, not a rule in the pages it cites; a listing at 0 is the mistake that loses a token, and a real gift says so"
+    },
+    {
+      "id": "start-after-end",
+      "severity": "error",
+      "message": "Order L3 starts at unix second 1800500000 and ends at 1800400000, so it is open for no second: it ends before it starts. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 11,
+      "column": 221,
+      "at": "examples/bad/orders.json:11",
+      "subject": "L3",
+      "fix": "Set the end after the start; both are unix seconds.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "refusing an order that ends at or before its start is a best practice of this tool, not a rule in the pages it cites; such an order is almost always a start and an end written the wrong way round or in two different units"
+    },
+    {
+      "id": "erc1155-amount-above-balance",
+      "severity": "error",
+      "message": "Order L4 lists 12 of token #3 of the ERC-1155 collection Meadow Example Badges, but the file declares a balance of 5 for its maker. A compliant ERC-1155 contract reverts a transfer of more than the holder has.",
+      "file": "examples/bad/orders.json",
+      "line": 12,
+      "column": 167,
+      "at": "examples/bad/orders.json:12",
+      "subject": "L4",
+      "fix": "Lower the amount to the balance of the maker, or correct makerBalance if the maker holds more.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "The transfer functions of ERC-1155 move an amount of a token id, and a compliant contract reverts when the holder has less of that id than the amount sent.",
+          "source": "ERC-1155: Multi Token Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-1155"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "price-malformed",
+      "severity": "error",
+      "message": "The price of order L4 has 7 decimal places, but USDC holds 6, so it cannot be paid as written.",
+      "file": "examples/bad/orders.json",
+      "line": 12,
+      "column": 200,
+      "at": "examples/bad/orders.json:12",
+      "subject": "L4",
+      "fix": "Write the price as a plain decimal in the unit of the currency, such as \"0.25\" for 0.25 ETH, with no sign, exponent or separator and no more places than the currency has (18 for ETH, 6 for USDC).",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "maker-is-taker",
+      "severity": "error",
+      "message": "The taker of order L5 is its own maker, 0xdddddddddddddddddddddddddddddddddddddddd, so the order can only fill against the wallet that made it. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 13,
+      "column": 93,
+      "at": "examples/bad/orders.json:13",
+      "subject": "L5",
+      "fix": "Name the buyer or the seller the order is meant for as taker, or leave taker out for an order anyone may fill.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "refusing an order whose taker is its maker is a best practice of this tool, not a rule in the pages it cites; such an order moves nothing and pays fees for it, or was meant for another address"
+    },
+    {
+      "id": "erc1155-amount-invalid",
+      "severity": "error",
+      "message": "Order L5 is for 0 of token #4 of the ERC-1155 collection Meadow Example Badges. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 13,
+      "column": 222,
+      "at": "examples/bad/orders.json:13",
+      "subject": "L5",
+      "fix": "Write the number of tokens the order is for, 1 or more.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "refusing an amount of 0 is a best practice of this tool, not a rule in the pages it cites; ERC-1155 does not forbid a transfer of 0, but an order for nothing is never what a maker means"
+    },
+    {
+      "id": "currency-chain-mismatch",
+      "severity": "error",
+      "message": "The currency of order L5 is SOL, which the tool knows on no chain of the EVM family, but the chain of the file is ethereum. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 13,
+      "column": 269,
+      "at": "examples/bad/orders.json:13",
+      "subject": "L5",
+      "fix": "Price the order in a currency of the chain of the file, or correct the chain.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "matching the currency of an order with the chain of the file is a best practice of this tool, not a rule in the pages it cites; the tool knows a short list of currencies and chains and leaves the others alone with a note"
+    },
+    {
+      "id": "fees-exceed-price",
+      "severity": "error",
+      "message": "The fees of order L5 add up to 3 SOL, 1 SOL above its price of 2 SOL, so the seller would receive nothing and the order cannot be filled. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 13,
+      "column": 328,
+      "at": "examples/bad/orders.json:13",
+      "subject": "L5",
+      "fix": "Lower the fees or raise the price until the fees are a part of it; check that a fee written in basis points was not written as an amount, or the other way round.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "adding up the fees of an order against its price is a best practice of this tool, not a rule in the pages it cites; the pages it cites do not describe the fees of a marketplace, and an order whose fees take the whole price is never what a seller means"
+    },
+    {
+      "id": "address-malformed",
+      "severity": "error",
+      "message": "The maker of order O1, \"0x12345\", has 5 characters after 0x, not 40; an address is 0x followed by 40 hex digits. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 14,
+      "column": 36,
+      "at": "examples/bad/orders.json:14",
+      "subject": "O1",
+      "fix": "Copy the address again from the wallet or the contract; send nothing to a zero address, which no one holds.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "checking the form of an address is a best practice of this tool, not a rule in the pages it cites; the form is the one wallets write on an EVM chain, no page is saved for it, and a typo or a zero address in an order sends tokens or fees where no one can reach them"
+    },
+    {
+      "id": "offer-in-native-currency",
+      "severity": "error",
+      "message": "Offer O1 is priced in ETH, the native currency of ethereum, which a marketplace cannot draw from the wallet of the buyer when a seller fills the offer; offers are paid in a wrapped token the buyer approved. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 14,
+      "column": 146,
+      "at": "examples/bad/orders.json:14",
+      "subject": "O1",
+      "fix": "Price the offer in the wrapped token of the chain, such as WETH, and have the buyer approve it for the marketplace.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "asking for a wrapped token on an offer is a best practice of this tool, not a rule in the pages it cites; an offer is filled later by the seller, who can draw a token the buyer approved but not the native currency of the buyer"
+    },
+    {
+      "id": "order-expired",
+      "severity": "error",
+      "message": "Order O1 ends at unix second 1799900000, 100,000 seconds before the second given with --now, 1800000000, so it can no longer be filled. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 14,
+      "column": 186,
+      "at": "examples/bad/orders.json:14",
+      "subject": "O1",
+      "fix": "Give the order a later end and sign it again, or remove it from the file.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "comparing the end of an order with --now is a best practice of this tool, not a rule in the pages it cites; the tool reads no clock, so the check runs only when --now names the second to compare with"
+    },
+    {
+      "id": "address-malformed",
+      "severity": "error",
+      "message": "The recipient of fee 1 of order O1, \"0x0000000000000000000000000000000000000000\", is the zero address, which no one holds; a fee sent there is lost. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 14,
+      "column": 239,
+      "at": "examples/bad/orders.json:14",
+      "subject": "O1",
+      "fix": "Copy the address again from the wallet or the contract; send nothing to a zero address, which no one holds.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "checking the form of an address is a best practice of this tool, not a rule in the pages it cites; the form is the one wallets write on an EVM chain, no page is saved for it, and a typo or a zero address in an order sends tokens or fees where no one can reach them"
+    },
+    {
+      "id": "criteria-root-missing",
+      "severity": "error",
+      "message": "Order O2 is an offer for a set of tokens with no criteria, so no merkle root names the tokens it covers. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 15,
+      "column": 36,
+      "at": "examples/bad/orders.json:15",
+      "subject": "O2",
+      "fix": "Build the merkle tree of the token ids the offer covers and set its root in criteria.root, or make the offer a collection offer if it covers every token.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "asking for a merkle root on an offer for a set of tokens is a best practice of this tool, not a rule in the pages it cites; the common way to name a set of tokens in an order is the root of a merkle tree of their ids, and an offer with none covers every token or none"
+    },
+    {
+      "id": "field-duplicate",
+      "severity": "error",
+      "message": "The id o1 is also the id of the order at line 14; each order needs an id of its own.",
+      "file": "examples/bad/orders.json",
+      "line": 16,
+      "column": 7,
+      "at": "examples/bad/orders.json:16",
+      "subject": "o1",
+      "fix": "Give every order an id of its own, and declare each contract once.",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "secret-in-file",
+      "severity": "error",
+      "message": "The file holds the key \"seedPhrase\", which names a seed, a mnemonic or a private key. The tool never reads one, and the value is not shown.",
+      "file": "examples/bad/orders.json",
+      "line": 16,
+      "column": 351,
+      "at": "examples/bad/orders.json:16",
+      "subject": null,
+      "fix": "Remove the value from the file and from wherever the file was copied, treat it as exposed and move what it controls to a new key. An order export names wallets by their public address only.",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "field-missing",
+      "severity": "error",
+      "message": "Order O4 has no price.",
+      "file": "examples/bad/orders.json",
+      "line": 17,
+      "column": 5,
+      "at": "examples/bad/orders.json:17",
+      "subject": "O4",
+      "fix": "Add the field named; docs/inputs.md lists what the file needs.",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "field-invalid",
+      "severity": "error",
+      "message": "The side of order O4 is \"bid\"; it must be one of listing, offer.",
+      "file": "examples/bad/orders.json",
+      "line": 17,
+      "column": 19,
+      "at": "examples/bad/orders.json:17",
+      "subject": null,
+      "fix": "Write the value as docs/inputs.md shows: text for ids, addresses and choices, whole numbers for amounts, balances and times, plain decimal numbers for prices and fee amounts, true or false for flags.",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "expiry-too-long",
+      "severity": "warning",
+      "message": "Order L1 is open for more than 358 days from its start, longer than the 180 days of --max-expiry-days. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 9,
+      "column": 252,
+      "at": "examples/bad/orders.json:9",
+      "subject": "L1",
+      "fix": "Shorten the order, or raise --max-expiry-days for a file whose orders are long on purpose.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "warning above a length of 180 days is a best practice of this tool, not a rule in the pages it cites; the pages it cites set no length, and the threshold can be changed with --max-expiry-days"
+    },
+    {
+      "id": "royalty-receiver-mismatch",
+      "severity": "warning",
+      "message": "Fee 2 of order L1 pays royalty to 0x7777777777777777777777777777777777777777, but collection Harbor Example Owls declares 0x9999999999999999999999999999999999999999 as its receiver. The royaltyInfo of ERC-2981 answers a marketplace with the address the royalty is sent to.",
+      "file": "examples/bad/orders.json",
+      "line": 9,
+      "column": 399,
+      "at": "examples/bad/orders.json:9",
+      "subject": "L1",
+      "fix": "Pay the royalty to the receiver the contract declares, or update the declared receiver in the file if the contract was changed.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "The royaltyInfo function of ERC-2981 answers a marketplace with two values for a sale: the address the royalty is to be sent to, and the amount.",
+          "source": "ERC-2981: NFT Royalty Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-2981"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "duplicate-listing",
+      "severity": "warning",
+      "message": "Order L2 lists token #7 of Harbor Example Owls by the same maker as order L1 at line 9 at another price, 1.5 ETH there and 1.2 ETH here. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 10,
+      "column": 7,
+      "at": "examples/bad/orders.json:10",
+      "subject": "L2",
+      "fix": "Keep one listing per token and cancel the other; if the price changed, cancel the older listing on chain.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "reporting a token listed twice by one maker is a best practice of this tool, not a rule in the pages it cites; two listings of one token at two prices are a mistake far more often than a plan"
+    },
+    {
+      "id": "order-never-expires",
+      "severity": "warning",
+      "message": "Order L2 has no end, so it stays open for good and can be filled long after its price stopped making sense. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 10,
+      "column": 7,
+      "at": "examples/bad/orders.json:10",
+      "subject": "L2",
+      "fix": "Give every order an end, in unix seconds, no further ahead than the order is meant to last.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "asking for an end on every order is a best practice of this tool, not a rule in the pages it cites; a listing or an offer that stays open for good can be filled long after its price stopped making sense"
+    },
+    {
+      "id": "royalty-above-declared",
+      "severity": "warning",
+      "message": "Order L2 pays 0.09 ETH of royalty, but the royalty of 5% that collection Harbor Example Owls declares works out to 0.06 ETH on the price of 1.2 ETH. Under ERC-2981 the royalty owed is a percentage of the sale price.",
+      "file": "examples/bad/orders.json",
+      "line": 10,
+      "column": 408,
+      "at": "examples/bad/orders.json:10",
+      "subject": "L2",
+      "fix": "Set the royalty of the order to the declared share of its price, or correct the declared royalty of the collection.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "Under ERC-2981 the royalty owed on a sale is worked out as a share of the sale price and paid in the unit of the sale; the page speaks of a percentage, and names no unit such as basis points and no largest value.",
+          "source": "ERC-2981: NFT Royalty Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-2981"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "field-unknown",
+      "severity": "warning",
+      "message": "The key \"makerBalanse\" of order 5 is not one the tool reads, so its value was left out of every check. Did you mean \"makerBalance\"? The keys of order 5 are id, orderHash, side, kind, maker, taker, contract, tokenId, amount, makerBalance, price, currency, start, end, fees, criteria, transfer, notes.",
+      "file": "examples/bad/orders.json",
+      "line": 13,
+      "column": 235,
+      "at": "examples/bad/orders.json:13",
+      "subject": null,
+      "fix": "Correct the spelling to a field of docs/inputs.md, or remove it.",
+      "kind": "input",
+      "basis": [],
+      "own": null
+    },
+    {
+      "id": "royalty-below-declared",
+      "severity": "info",
+      "message": "Order L1 pays 0.045 ETH of royalty, but the royalty of 5% that collection Harbor Example Owls declares works out to 0.075 ETH on the price of 1.5 ETH. ERC-2981 leaves the payment of a royalty to the marketplace, so this is a note.",
+      "file": "examples/bad/orders.json",
+      "line": 9,
+      "column": 458,
+      "at": "examples/bad/orders.json:9",
+      "subject": "L1",
+      "fix": "Pay the declared share of the price as royalty if the marketplace or the creator expects it, or keep the order as it is on purpose.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "Under ERC-2981 the royalty owed on a sale is worked out as a share of the sale price and paid in the unit of the sale; the page speaks of a percentage, and names no unit such as basis points and no largest value.",
+          "source": "ERC-2981: NFT Royalty Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-2981"
+        },
+        {
+          "text": "ERC-2981 only lets a contract signal its royalty; the page leaves the payment to the marketplaces and calls it voluntary, since a move of a token between wallets is not always a sale.",
+          "source": "ERC-2981: NFT Royalty Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-2981"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "royalty-below-declared",
+      "severity": "info",
+      "message": "Order L5 pays no royalty, but the royalty of 2.5% that collection Meadow Example Badges declares works out to 0.05 SOL on the price of 2 SOL. ERC-2981 leaves the payment of a royalty to the marketplace, so this is a note.",
+      "file": "examples/bad/orders.json",
+      "line": 13,
+      "column": 255,
+      "at": "examples/bad/orders.json:13",
+      "subject": "L5",
+      "fix": "Pay the declared share of the price as royalty if the marketplace or the creator expects it, or keep the order as it is on purpose.",
+      "kind": "documented",
+      "basis": [
+        {
+          "text": "Under ERC-2981 the royalty owed on a sale is worked out as a share of the sale price and paid in the unit of the sale; the page speaks of a percentage, and names no unit such as basis points and no largest value.",
+          "source": "ERC-2981: NFT Royalty Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-2981"
+        },
+        {
+          "text": "ERC-2981 only lets a contract signal its royalty; the page leaves the payment to the marketplaces and calls it voluntary, since a move of a token between wallets is not always a sale.",
+          "source": "ERC-2981: NFT Royalty Standard",
+          "url": "https://eips.ethereum.org/EIPS/eip-2981"
+        }
+      ],
+      "own": null
+    },
+    {
+      "id": "collection-offer-without-criteria",
+      "severity": "info",
+      "message": "Order o1 is a collection offer, so any holder of Harbor Example Owls may fill it with the token they want least. This is a best practice of this tool, not a rule in the pages it cites.",
+      "file": "examples/bad/orders.json",
+      "line": 16,
+      "column": 36,
+      "at": "examples/bad/orders.json:16",
+      "subject": "o1",
+      "fix": "Keep the collection offer if any token will do, or make it an offer for a set of tokens with a merkle root of their ids.",
+      "kind": "best practice",
+      "basis": [],
+      "own": "noting that a collection offer covers every token is a best practice of this tool, not a rule in the pages it cites; it is a common kind of offer, so it is a note, never a warning"
+    }
+  ],
+  "orders": [
+    {
+      "id": "L1",
+      "side": "listing",
+      "collection": "Harbor Example Owls",
+      "token": "#7",
+      "amount": 2,
+      "price": "1.5 ETH",
+      "fees": "0.0825 ETH",
+      "sellerGets": "1.4175 ETH"
+    },
+    {
+      "id": "L2",
+      "side": "listing",
+      "collection": "Harbor Example Owls",
+      "token": "#7",
+      "amount": null,
+      "price": "1.2 ETH",
+      "fees": "0.12 ETH",
+      "sellerGets": "1.08 ETH"
+    },
+    {
+      "id": "L3",
+      "side": "listing",
+      "collection": "Harbor Example Owls",
+      "token": "#8",
+      "amount": null,
+      "price": "0",
+      "fees": "0",
+      "sellerGets": null
+    },
+    {
+      "id": "L4",
+      "side": "listing",
+      "collection": "Meadow Example Badges",
+      "token": "#3",
+      "amount": 12,
+      "price": null,
+      "fees": null,
+      "sellerGets": null
+    },
+    {
+      "id": "L5",
+      "side": "listing",
+      "collection": "Meadow Example Badges",
+      "token": "#4",
+      "amount": 0,
+      "price": "2 SOL",
+      "fees": "3 SOL",
+      "sellerGets": null
+    },
+    {
+      "id": "O1",
+      "side": "offer",
+      "collection": "Harbor Example Owls",
+      "token": "#9",
+      "amount": null,
+      "price": "0.8 ETH",
+      "fees": "0.06 ETH",
+      "sellerGets": "0.74 ETH"
+    },
+    {
+      "id": "O2",
+      "side": "offer",
+      "collection": "Harbor Example Owls",
+      "token": "by root",
+      "amount": null,
+      "price": "0.5 WETH",
+      "fees": "0.025 WETH",
+      "sellerGets": "0.475 WETH"
+    },
+    {
+      "id": "o1",
+      "side": "offer",
+      "collection": "Harbor Example Owls",
+      "token": "any",
+      "amount": null,
+      "price": "0.4 WETH",
+      "fees": "0.02 WETH",
+      "sellerGets": "0.38 WETH"
+    },
+    {
+      "id": "O4",
+      "side": null,
+      "collection": "Harbor Example Owls",
+      "token": "#10",
+      "amount": null,
+      "price": null,
+      "fees": null,
+      "sellerGets": null
+    }
+  ],
+  "notes": [],
+  "notice": "This report is an input to a review of marketplace orders before they are signed or filled: not legal or financial advice, not an audit of the marketplace or its contracts and not a guarantee that an order will fill as intended.",
+  "result": {
+    "pass": false,
+    "failOn": "error",
+    "text": "FAIL - 18 findings at or above error (18 error, 6 warning, 3 info)"
+  }
+}

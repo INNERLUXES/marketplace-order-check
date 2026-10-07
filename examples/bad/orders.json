@@ -1,0 +1,19 @@
+{
+  "notes": "Made-up order export for the examples of marketplace-order-check: every name, address and hash is made up, and nothing here is legal or financial advice.",
+  "chain": "ethereum",
+  "collections": [
+    { "contract": "0x1111111111111111111111111111111111111111", "name": "Harbor Example Owls", "standard": "ERC-721", "royalty": { "receiver": "0x9999999999999999999999999999999999999999", "bps": 500 } },
+    { "contract": "0x2222222222222222222222222222222222222222", "name": "Meadow Example Badges", "standard": "ERC-1155", "royalty": { "receiver": "0x8888888888888888888888888888888888888888", "bps": 250 } }
+  ],
+  "orders": [
+    { "id": "L1", "side": "listing", "kind": "item", "maker": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "contract": "0x1111111111111111111111111111111111111111", "tokenId": "7", "amount": 2, "price": "1.5", "currency": "ETH", "start": 1799000000, "end": 1830000000, "fees": [{ "kind": "marketplace", "recipient": "0xffffffffffffffffffffffffffffffffffffffff", "bps": 250 }, { "kind": "royalty", "recipient": "0x7777777777777777777777777777777777777777", "bps": 300 }] },
+    { "id": "L2", "side": "listing", "maker": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "contract": "0x1111111111111111111111111111111111111111", "tokenId": 7, "price": "1.2", "currency": "ETH", "start": 1800000000, "fees": [{ "kind": "marketplace", "recipient": "0xffffffffffffffffffffffffffffffffffffffff", "bps": 250 }, { "kind": "royalty", "recipient": "0x9999999999999999999999999999999999999999", "amount": "0.09" }] },
+    { "id": "L3", "side": "listing", "maker": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "contract": "0x1111111111111111111111111111111111111111", "tokenId": "8", "price": "0", "currency": "ETH", "start": 1800500000, "end": 1800400000 },
+    { "id": "L4", "side": "listing", "maker": "0xcccccccccccccccccccccccccccccccccccccccc", "contract": "0x2222222222222222222222222222222222222222", "tokenId": "3", "amount": 12, "makerBalance": 5, "price": "25.1234567", "currency": "USDC", "start": 1800000000, "end": 1802000000 },
+    { "id": "L5", "side": "listing", "maker": "0xdddddddddddddddddddddddddddddddddddddddd", "taker": "0xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", "contract": "0x2222222222222222222222222222222222222222", "tokenId": "4", "amount": 0, "makerBalanse": 10, "price": "2", "currency": "SOL", "start": 1800000000, "end": 1802000000, "fees": [{ "kind": "marketplace", "recipient": "0xffffffffffffffffffffffffffffffffffffffff", "amount": "3" }] },
+    { "id": "O1", "side": "offer", "maker": "0x12345", "contract": "0x1111111111111111111111111111111111111111", "tokenId": "9", "price": "0.8", "currency": "ETH", "start": 1799000000, "end": 1799900000, "fees": [{ "kind": "marketplace", "recipient": "0x0000000000000000000000000000000000000000", "bps": 250 }, { "kind": "royalty", "recipient": "0x9999999999999999999999999999999999999999", "bps": 500 }] },
+    { "id": "O2", "side": "offer", "kind": "criteria", "maker": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "contract": "0x1111111111111111111111111111111111111111", "price": "0.5", "currency": "WETH", "start": 1800000000, "end": 1801000000, "fees": [{ "kind": "royalty", "recipient": "0x9999999999999999999999999999999999999999", "bps": 500 }] },
+    { "id": "o1", "side": "offer", "kind": "collection", "maker": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "contract": "0x1111111111111111111111111111111111111111", "price": "0.4", "currency": "WETH", "start": 1800000000, "end": 1801000000, "fees": [{ "kind": "royalty", "recipient": "0x9999999999999999999999999999999999999999", "bps": 500 }], "seedPhrase": "lantern lantern lantern lantern lantern lantern lantern lantern lantern lantern lantern lantern" },
+    { "id": "O4", "side": "bid", "maker": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb", "contract": "0x1111111111111111111111111111111111111111", "tokenId": "10", "currency": "WETH", "end": 1801000000 }
+  ]
+}

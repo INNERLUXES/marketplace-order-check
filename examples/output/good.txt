@@ -1,0 +1,55 @@
+marketplace-order-check: examples/good/orders.json
+file: examples/good/orders.json (JSON, 15 lines, 2,882 bytes)
+chain: ethereum
+collections: 2: Harbor Example Owls, ERC-721, royalty 500 basis points (5%) to 0x9999999999999999999999999999999999999999; Meadow Example Badges, ERC-1155, royalty 250 basis points (2.5%) to 0x8888888888888888888888888888888888888888
+orders: 5 (3 listings, 2 offers)
+now: unix second 1800000000, from --now
+max expiry: 180 days
+findings: 0
+
+Checks (26)
+
+  check                              level    kind           findings
+  file-unreadable                    error    input          0
+  field-missing                      error    input          0
+  field-unknown                      warning  input          0
+  field-invalid                      error    input          0
+  field-duplicate                    error    input          0
+  secret-in-file                     error    input          0
+  price-malformed                    error    input          0
+  fees-exceed-price                  error    best practice  0
+  royalty-receiver-mismatch          warning  documented     0
+  royalty-above-declared             warning  documented     0
+  royalty-below-declared             info     documented     0
+  order-never-expires                warning  best practice  0
+  expiry-too-long                    warning  best practice  0
+  order-expired                      error    best practice  0
+  start-after-end                    error    best practice  0
+  price-zero                         error    best practice  0
+  currency-chain-mismatch            error    best practice  0
+  offer-in-native-currency           error    best practice  0
+  duplicate-listing                  warning  best practice  0
+  erc721-amount-not-one              error    documented     0
+  erc1155-amount-invalid             error    best practice  0
+  erc1155-amount-above-balance       error    documented     0
+  address-malformed                  error    best practice  0
+  maker-is-taker                     error    best practice  0
+  criteria-root-missing              error    best practice  0
+  collection-offer-without-criteria  info     best practice  0
+
+Findings (0)
+
+  none
+
+Orders (5)
+
+  order  side     collection             token    amount  price     fees        seller gets
+  L1     listing  Harbor Example Owls    #7       1       1.5 ETH   0.1125 ETH  1.3875 ETH
+  L2     listing  Meadow Example Badges  #3       2       40 USDC   2 USDC      38 USDC
+  O1     offer    Harbor Example Owls    #9       -       0.8 WETH  0.06 WETH   0.74 WETH
+  O2     offer    Harbor Example Owls    by root  3       0.5 WETH  0.025 WETH  0.475 WETH
+  T1     listing  Harbor Example Owls    #11      -       transfer  0           -
+
+This report is an input to a review of marketplace orders before they are signed or filled: not legal or financial advice, not an audit of the marketplace or its contracts and not a guarantee that an order will fill as intended.
+
+RESULT: PASS - no finding at or above error

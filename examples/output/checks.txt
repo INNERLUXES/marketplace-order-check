@@ -1,0 +1,30 @@
+marketplace-order-check checks
+
+  file-unreadable                    error    input          the order file is not JSON the reader can follow, or its top level is not an object, so nothing in it was read
+  field-missing                      error    input          a field the checks need is not in the file: the chain, the collections or the orders, the contract or the standard of a collection, or the id, side, maker, contract, token id, amount of an ERC-1155 order, price or currency of an order, the kind or the recipient of a fee, or a declared collection for the contract of an order
+  field-unknown                      warning  input          a key the tool does not read, often a misspelt one; its value was left out of every check
+  field-invalid                      error    input          a value of the wrong type or form: text where a whole number belongs, a chain, standard, side, kind or fee kind the tool does not know, a token id that is not a whole number of at most 78 digits, a hash that is not 64 hex digits, a fee with both bps and amount, a listing of kind collection or criteria, a token id or criteria on an order of the wrong kind, or a transfer with a price
+  field-duplicate                    error    input          two orders share an id (compared without case and outer spaces), or a contract is declared as two collections, so a reader of the file cannot tell them apart
+  secret-in-file                     error    input          the file holds a private key, a seed or a mnemonic, under a key named for one or as a value shaped like one; the tool never reads it and never shows it
+  price-malformed                    error    input          the price of an order or the amount of a fee is not a plain decimal number of 0 or more, or has more decimal places than the currency of the order holds
+  fees-exceed-price                  error    best practice  the marketplace fee, the royalty and the other fees of an order add up to its whole price or more, so the seller would receive nothing or the order could not be filled
+  royalty-receiver-mismatch          warning  documented     an order pays its royalty to an address other than the ERC-2981 receiver the file declares for the collection, though royaltyInfo names the address the royalty is sent to
+  royalty-above-declared             warning  documented     an order pays more royalty than the ERC-2981 royalty the file declares for the collection works out to on its price
+  royalty-below-declared             info     documented     an order pays less royalty than the ERC-2981 royalty the file declares for the collection works out to on its price, or none; ERC-2981 leaves the payment to the marketplace, so this is a note
+  order-never-expires                warning  best practice  an order has no end, an end of never, or an end so far ahead that it stays open for good, so a price that is forgotten can be filled at any time
+  expiry-too-long                    warning  best practice  an order is open for longer than --max-expiry-days (180 days by default), counted from its start, or from --now when it has none
+  order-expired                      error    best practice  an order ends at or before the second given with --now, so it can no longer be filled; the check runs only when --now is given
+  start-after-end                    error    best practice  an order starts at or after its end, so it is open for no second
+  price-zero                         error    best practice  an order has a price of 0 and is not marked as a transfer, so the token would go for nothing
+  currency-chain-mismatch            error    best practice  the currency of an order belongs to other chains than the chain of the file, such as SOL or AVAX on ethereum
+  offer-in-native-currency           error    best practice  an offer is priced in the native currency of its chain, such as ETH on ethereum, which a marketplace cannot draw from the wallet of the buyer
+  duplicate-listing                  warning  best practice  the same maker lists the same token of the same contract twice, so the cheaper listing may be filled while the dearer one is the one the seller watches
+  erc721-amount-not-one              error    documented     an ERC-721 order for one token id has an amount other than 1, or an ERC-721 order of any kind is for 0 tokens, though an ERC-721 holder has none or one of a token
+  erc1155-amount-invalid             error    best practice  an ERC-1155 order is for an amount of 0
+  erc1155-amount-above-balance       error    documented     an ERC-1155 listing is for more of a token than the balance of the maker the file declares, though a transfer of more than the balance reverts
+  address-malformed                  error    best practice  a maker, a taker, a contract, a fee recipient or a royalty receiver that is not 0x and 40 hex digits, or is the zero address where the zero address loses tokens or money
+  maker-is-taker                     error    best practice  an order names its own maker as the only taker, so it can only fill against the wallet that made it
+  criteria-root-missing              error    best practice  an offer for a set of tokens (kind criteria) has no merkle root of the token ids, or a root of zeros, so the marketplace cannot tell which tokens it covers
+  collection-offer-without-criteria  info     best practice  a collection offer covers every token of the contract, so any holder may fill it with the token they want least; a note, since many offers mean that
+
+A documented check rests on ERC-2981, ERC-721 and ERC-1155; a best practice check is this tool's own choice and says so in its message. An input check is about the file itself. None of it is legal or financial advice.
